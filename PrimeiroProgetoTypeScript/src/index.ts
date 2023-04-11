@@ -1,32 +1,58 @@
-function sendSpaceship(name: string, captain: string) {
+// Um array vai ser usado para salvar as naves de forma mais simplificada
+const spaceships = []
+
+/**
+ * Funções Principais
+ */
+
+function addSpaceship(name: string, pilot: string, crewLimit: number) {
   const spaceship = {
     name,
-    captain,
-    speed: 20,
-    inMission: true,
-    crew: []
+    pilot,
+    crewLimit,
+    crew: [],
+    inMission: false
   }
 
-  alert(`A nave ${spaceship.name} comandada pelo capitão ${spaceship.captain} foi enviada em uma missão.`)
+  spaceships.push(spaceship)
+  
+  alert(`A nave ${spaceship.name} foi registrada.`)
+}
 
+function findSpaceship(name: string) {
+  let spaceship: {
+    name: string,
+    pilot: string,
+    crewLimit: number,
+    crew: string[],
+    inMission: boolean
+  }
+  
+  spaceship = spaceships.find((ship) => {
+    return ship.name === name
+  });
+  
   return spaceship
 }
 
-function accelerate(targetSpeed: number, spaceship: { name: string; speed: number; }) {
-  if (spaceship.speed > targetSpeed) {
-    alert(`Reduzindo a velocidade da ${spaceship.name} para ${targetSpeed}...`)
-  } else if (spaceship.speed < targetSpeed) {
-    alert(`Aumentando a velocidade da ${spaceship.name} para ${targetSpeed}...`)
+function addCrewMember(member: string, spaceship: { name: string, crewLimit: number, crew: string[] }) {
+  if (spaceship.crew.length >= spaceship.crewLimit) {
+    alert(`${member} não pode ser adicionado à tripulação. Limite atingido.`)
   } else {
-    alert(`Mantendo a velocidade da ${spaceship.name}...`)
+    spaceship.crew.push(member);
+  
+    alert(`${member} foi adicionado à tripulação da ${spaceship.name}`)
   }
 }
 
-const spaceshipName = prompt('Insira o nome da nave a ser enviada:')
-const spaceshipCaptain = prompt('Insira o nome do capitão da nave:')
+function sendInMission(spaceship: { name: string, crewLimit: number, crew: string[], inMission: boolean }) {
+  if (spaceship.inMission) {
+    alert(`${spaceship.name} não pode ser enviada. Nave já em missão.`)
+  } else if (spaceship.crew.length < Math.floor(spaceship.crewLimit / 3)) {
+    alert(`${spaceship.name} não pode ser enviada. Tripulação insuficiente.`)
+  } else {
+    spaceship.inMission = true
 
-const currentShip = sendSpaceship(spaceshipName, spaceshipCaptain)
-
-const speed = Number(prompt('Insira a velocidade para a qual deseja acelerar:'))
-
-accelerate(speed, currentShip)
+    alert(`${spaceship.name} enviada para a missão!`)
+  }
+}
